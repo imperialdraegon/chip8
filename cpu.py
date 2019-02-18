@@ -185,22 +185,14 @@ class CPU:
     def op_DXXX(self, x, y, n):
         x_coord = self.chip8.V[x]
         y_coord = self.chip8.V[y]
-        for address in range(self.chip8.I, self.chip8.I + n):
-            if y_coord >= self.chip8.screen_height:
-                y_coord += -self.chip8.screen_height
-            sprite = format(self.chip8.memory[address], "#010b")[2:]
-            for i in range(0, 8):
-                print(int(sprite[i]))
-                if x_coord >= self.chip8.screen_width:
-                    x_coord += -self.chip8.screen_width
-                if self.chip8.screen[y_coord][x_coord] != int(sprite[i]):
-                    self.chip8.V[15] = 0x1
-                else:
-                    self.chip8.V[15] = 0x0
-                self.chip8.screen[y_coord][x_coord] = self.chip8.screen[y_coord][x_coord] ^ int(sprite[i])
-                x_coord += 1
-            y_coord += 1
-
+        self.chip8.V[15] = 0
+        for address in range(n):
+            pixel = format(self.chip8.memory[self.chip8.I + address], "08b")
+            for i in range(8):
+                prev = self.chip8.screen[(y_coord + address) % self.chip8.screen_height][(x_coord + i) % self.chip8.screen_width]
+                if prev ^ int(pixel[i]) == 0:
+                    self.chip8.V[15] = 1
+                self.chip8.screen[(y_coord + address) % self.chip8.screen_height][(x_coord + i) % self.chip8.screen_width] = prev ^ int(pixel[i])
     def op_EX9E(self, x):
         pass
 

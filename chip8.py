@@ -1,4 +1,3 @@
-import numpy
 import pygame
 from time import sleep
 from cpu import CPU
@@ -48,7 +47,7 @@ class Chip8:
             0xF0, 0x80, 0xF0, 0x80, 0x80,  # F
         ]
 
-        self.init("../roms/TANK")
+        self.init("../../roms/chip8/PUZZLE")
 
     def load_rom_to_memory(self, path):
         code = open(path, "rb").read()
